@@ -24,14 +24,13 @@ class HeyDoctor extends Component{
         this.props.fetchDoctors();
     }
 
-    componentDidUpdate(prevProps,prevState){
-        debugger;
-        if(prevProps.doctorIds !== this.props.doctorIds){
-            this.props.doctorIds.forEach(doctorId=> {
-                this.props.fetchAppointmentByDoctor(doctorId);
-            });
-        }
-    }
+    // componentDidUpdate(prevProps,prevState){
+    //     if(prevProps.doctorIds !== this.props.doctorIds){
+    //         this.props.doctorIds.forEach(doctorId=> {
+    //             this.props.fetchAppointmentByDoctor(doctorId);
+    //         });
+    //     }
+    // }
 
     displaySideBar = (activeItem) => {
         let {doctors} = this.props;
@@ -58,6 +57,7 @@ class HeyDoctor extends Component{
         let selectedAppointments = appointments[selectedDoctorId];
         let doctorInfo = doctors[selectedDoctorId];
         return(
+            <Container textAlign={"center"}>
             <Grid  style={{paddingTop:'3em'}}>
                 <Grid.Column width={3}>
                     <Menu secondary vertical>
@@ -70,15 +70,14 @@ class HeyDoctor extends Component{
                     <DoctorPatients appointments={selectedAppointments} doctorInfo={doctorInfo}/>
                 </Grid.Column>
             </Grid>
+            </Container>
         )
     }
 }
 
 const mapStateToProps = ({doctorsReducer, fetchAppsReducers}) => {
-    let doctorIds = Object.keys(doctorsReducer);
     return {
         doctors:doctorsReducer,
-        doctorIds,
         appointments:fetchAppsReducers,
     }
 };
@@ -86,7 +85,6 @@ const mapStateToProps = ({doctorsReducer, fetchAppsReducers}) => {
 const dispatchMapToProps = (dispatch) => {
     return bindActionCreators({
         fetchDoctors,
-        fetchAppointmentByDoctor,
     }, dispatch);
 };
 

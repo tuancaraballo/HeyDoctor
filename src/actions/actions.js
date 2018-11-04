@@ -27,15 +27,21 @@ export const fetchDoctors = () => {
                     type:'FETCH_DOCTORS',
                     payload:response.body
                 });
+
+                let doctorids = Object.keys(response.body);
+
+                doctorids.forEach(doctorId => {
+                    fetchAppointmentByDoctor(doctorId, dispatch);
+                })
             }
         });
     }
 
 };
 
-export const fetchAppointmentByDoctor = (doctorId) => {
+export const fetchAppointmentByDoctor = (doctorId, dispatch) => {
 
-    return dispatch => {
+    // return dispatch => {
         const options = {
             method: 'POST',
             // url: `${CLOUD_FUNCTIONS_BASEURL}/getDoctors`,
@@ -50,23 +56,25 @@ export const fetchAppointmentByDoctor = (doctorId) => {
         };
 
         request(options, function (err, response, body) {
-            debugger;
+
             if (err) {
                 console.error('---Error ---', err);
                 throw  new Error(err)
             }else{
 
                 console.log('appointment', response.body);
+                let apps = [];
+                if(response.body){
+                    apps = Object.entries(response.body).map(([key, value]) =>value );
+                }
                 dispatch({
                     type:'FETCH_APPOINTMENTS',
                     payload:{
                         doctorId,
-                        appointments:response.body,
+                        appointments:apps,
                     }
                 });
             }
         });
-    }
-
 };
 
